@@ -1,1 +1,21 @@
+journalctl -u dynatrace-otel-collector -f
+
+curl -v -H "Authorization: Api-Token dt0c01.xxxxxxxxxxxx" \
+https://xxxxxxxxxxxxxx/api/v2/otlp/v1/metrics
+
+
+Traces: https://<your_environment_id>.live.dynatrace.com/api/v2/otlp/v1/traces
+Metrics: https://<your_environment_id>.live.dynatrace.com/api/v2/otlp/v1/metrics
+
+sudo systemctl status dynatrace-otel-collector
+
+sudo netstat -tuln | grep PortNumber
+sudo lsof -i :PortNumber
+sudo lsof -i :PortNumber
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+myprocess 1234  root   10u  IPv4  12345      0t0  TCP 127.0.0.1:4317 (LISTEN)
+sudo kill -9 <PID>
+
+
+
 
