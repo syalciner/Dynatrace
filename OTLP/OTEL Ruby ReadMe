@@ -8,6 +8,8 @@ Step 3 #touch /etc/dynatrace-otel-collector/config.yaml
 Step 4 # dynatrace-otel-collector validate --config=/etc/dynatrace-otel-collector/config.yaml (Verify)
 Step 5 # systemctl restart dynatrace-otel-collector
 ******************** For RUBY ************************************
+LINK : https://docs.dynatrace.com/docs/ingest-from/opentelemetry/walkthroughs/ruby
+
   111  sudo yum install -y ruby ruby-devel
   112  sudo yum install -y gcc make
   113  gem install opentelemetry-api
