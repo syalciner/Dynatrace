@@ -17,3 +17,33 @@ service:
       processors: []
       exporters: [otlphttp]
 
+**************************************
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+
+exporters:
+  otlphttp:
+    endpoint: "https://owo31830.live.dynatrace.com/api/v2/otlp/v1/traces"
+    headers:
+      Authorization: "Api-Token dt0c01.XRL4U74UTRCEESALSYB3MNY2.7TPDYC4VRBPNBBSZQ3PM2OJ4AKUOH5X3WNT7UACXB4HJ3PSDAG3TOT3LSL47HGS7"
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp]
+
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp]
