@@ -1,1 +1,17 @@
+1 - vi Payload.json
+
+"endTimeUnixNano": "1735074480000000000",
+                "kind": 2,
+                "name": "APP_OpenTelemetryTestV1.V1_0.MF_OpenTelemetryTestV1_0",
+                "spanId": "9b1c6260bccf4d60",
+                "startTimeUnixNano": "1735071000000000000",
+                "traceId": "c98ed88648b84215839ba61309002626"
+change start endTimeUnixNano and startTimeUnixNano 
+change traceId
+
+2-  python3 proto.py
+The script will be create output.pb file
+
+curl -X "POST" -v "https://xxxxxx/api/v2/otlp/v1/traces" -H "accept: */*" -H "Authorization: Api-Token dt0c01.xxxxxxxxxxxxxxxxxxxxx" -H "Content-Type: application/x-protobuf" --data-binary @output.pb -k
+  
 
