@@ -1,1 +1,151 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
+from pathlib import Path
+import img2pdf
 
+# Terminalden kullanıcı girişlerini al
+dashboard_url = input("Dashboard URL'sini giriniz: ")
+email_address = input("Kullanıcı e-posta adresinizi giriniz: ")
+password = input("Kullanıcı şifrenizi giriniz: ")
+sender_email = input("Gönderen e-posta adresini giriniz (SMTP için): ")
+sender_password = input("Gönderen e-posta şifresini giriniz (SMTP için): ")
+receiver_email = input("Alıcı e-posta adresini giriniz: ")
+
+# Sabit Ayarlar
+expected_dashboard_url = dashboard_url
+dashboard_title_selector = "div[uitestid='gwt-debug-inlineEditLabelViewText'][title='Monitoring Overview']"
+screenshot_path = "dashboard_screenshot.png"
+error_screenshot_path = "final_dashboard.png"
+pdf_path = "dashboard_screenshot.pdf"
+
+# Chrome Seçenekleri
+chrome_options = Options()
+chrome_options.add_argument("--incognito")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--window-size=1920,1080")
+chrome_options.add_experimental_option("prefs", {
+    "download.prompt_for_download": False,
+    "download.directory_upgrade": True,
+    "safebrowsing.enabled": True
+})
+
+# PNG'yi PDF'ye dönüştürme fonksiyonu
+def convert_png_to_pdf(png_path, pdf_path):
+    try:
+        with open(pdf_path, "wb") as f:
+            f.write(img2pdf.convert(png_path))
+        print(f"PNG dosyası PDF'ye dönüştürüldü: {pdf_path}")
+    except Exception as e:
+        print(f"PNG'den PDF'ye dönüştürme sırasında hata: {e}")
+
+# E-posta gönderme fonksiyonu
+def send_email(sender_email, sender_password, receiver_email, file_path):
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = "Dynatrace Dashboard Raporu"
+    body = "Merhaba,\n\nEkte Dashboardun PDF formatında ekran görüntüsünü bulabilirsiniz.\n\nİyi çalışmalar."
+    msg.attach(MIMEText(body, 'plain'))
+
+    with open(file_path, "rb") as attachment:
+        part = MIMEBase("application", "octet-stream")
+        part.set_payload(attachment.read())
+        encoders.encode_base64(part)
+        part.add_header("Content-Disposition", f"attachment; filename={Path(file_path).name}")
+        msg.attach(part)
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, receiver_email, msg.as_string())
+        server.quit()
+        print("E-posta başarıyla gönderildi.")
+    except Exception as e:
+        print(f"E-posta gönderme başarısız oldu: {e}")
+
+# Tarayıcıyı başlat
+try:
+    print("Tarayıcı başlatılıyor...")
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver.maximize_window()
+except Exception as e:
+    print(f"Tarayıcı başlatılırken hata oluştu: {e}")
+    exit()
+
+try:
+    # Dashboard URL'sine git
+    print("Dashboard URL'sine gidiliyor...")
+    driver.get(dashboard_url)
+
+    # Giriş ekranı kontrolü
+    print("Giriş ekranı yükleniyor...")
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, "email")))
+
+    # E-posta girme
+    print("E-posta adresi giriliyor...")
+    email_input = driver.find_element(By.NAME, "email")
+    email_input.send_keys(email_address)
+    email_input.send_keys(Keys.RETURN)
+
+    # Şifre ekranı kontrolü
+    print("Şifre ekranı yükleniyor...")
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-id='password_login']")))
+
+    # Şifre girme
+    print("Şifre giriliyor...")
+    password_input = driver.find_element(By.CSS_SELECTOR, "[data-id='password_login']")
+    password_input.send_keys(password)
+
+    # Giriş butonuna tıklama
+    print("Giriş butonuna tıklanıyor...")
+    sign_in_button = WebDriverWait(driver, 20).until(
+        EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'strato-button-label') and text()='Sign in']"))
+    )
+    sign_in_button.click()
+
+    # URL kontrolü
+    print("Dashboard URL'si kontrol ediliyor...")
+    WebDriverWait(driver, 40).until(lambda d: d.current_url == expected_dashboard_url)
+
+    # Dashboard başlığı kontrolü
+    print("Dashboard başlığı kontrol ediliyor...")
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, dashboard_title_selector))
+    )
+
+    # Sayfanın ekran görüntüsü alınıyor
+    print("Sayfanın ekran görüntüsü alınıyor...")
+    driver.save_screenshot(screenshot_path)
+    print(f"Ekran görüntüsü kaydedildi: {screenshot_path}")
+
+    # PNG'yi PDF'ye dönüştür
+    convert_png_to_pdf(screenshot_path, pdf_path)
+    file_to_send = pdf_path
+
+except Exception as e:
+    print(f"Hata: {e}")
+    driver.save_screenshot(error_screenshot_path)
+    print(f"Hata durumunda ekran görüntüsü alındı: {error_screenshot_path}")
+    # PNG'den PDF'ye dönüştür
+    convert_png_to_pdf(error_screenshot_path, pdf_path)
+    file_to_send = pdf_path
+
+finally:
+    # E-posta gönderimi
+    print("E-posta gönderiliyor...")
+    send_email(sender_email, sender_password, receiver_email, file_to_send)
+
+    driver.quit()
+    print("Tarayıcı kapatıldı.")
