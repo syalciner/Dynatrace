@@ -1,0 +1,152 @@
+{
+    "resourceSpans": [{
+        "resource": {
+            "attributes": [{
+                "key": "service.namespace",
+                "value": {
+                    "stringValue": "com.ibm"
+                }
+            },
+            {
+                "key": "service.platform",
+                "value": {
+                    "stringValue": "Windows Server 2019 Standard"
+                }
+            },
+            {
+                "key": "service.name",
+                "value": {
+                    "stringValue": "IBM App Connect Enterprise-TEST_SERVER12"
+                }
+            },
+            {
+                "key": "service.version",
+                "value": {
+                    "stringValue": "12.0.12"
+                }
+            },
+            {
+                "key": "telemetry.sdk.version",
+                "value": {
+                    "stringValue": "1.12.0"
+                }
+            },
+            {
+                "key": "service.instance.id",
+                "value": {
+                    "stringValue": "MachineName-16356"
+                }
+            },
+            {
+                "key": "telemetry.sdk.language",
+                "value": {
+                    "stringValue": "cpp"
+                }
+            },
+            {
+                "key": "telemetry.sdk.name",
+                "value": {
+                    "stringValue": "opentelemetry"
+                }
+            }]
+        },
+        "scopeSpans": [{
+            "scope": {
+                "name": "IBM App Connect Enterprise",
+                "version": "12012"
+            },
+            "spans": [{
+                "attributes": [{
+                    "key": "applicationName",
+                    "value": {
+                        "stringValue": "APP_OpenTelemetryTestV1"
+                    }
+                },
+                {
+                    "key": "flowName",
+                    "value": {
+                        "stringValue": "V1_0.MF_OpenTelemetryTestV1_0"
+                    }
+                },
+                {
+                    "key": "http.method",
+                    "value": {
+                        "stringValue": "POST"
+                    }
+                },
+                {
+                    "key": "http.request_content_length",
+                    "value": {
+                        "stringValue": "11"
+                    }
+                },
+                {
+                    "key": "http.scheme",
+                    "value": {
+                        "stringValue": "https"
+                    }
+                },
+                {
+                    "key": "http.target",
+                    "value": {
+                        "stringValue": "/opentelemetry"
+                    }
+                },
+                {
+                    "key": "integrationServerName",
+                    "value": {
+                        "stringValue": "TEST_SERVER12"
+                    }
+                },
+                {
+                    "key": "net.host.name",
+                    "value": {
+                        "stringValue": "MachineName"
+                    }
+                },
+                {
+                    "key": "net.host.port",
+                    "value": {
+                        "stringValue": "7843"
+                    }
+                },
+                {
+                    "key": "nodeName",
+                    "value": {
+                        "stringValue": "HTTP Input"
+                    }
+                },
+                {
+                    "key": "nodeType",
+                    "value": {
+                        "stringValue": "ComIbmWSInputNode"
+                    }
+                },
+                {
+                    "key": "nodeUri",
+                    "value": {
+                        "stringValue": "/apiv2/applications/APP_OpenTelemetryTestV1/messageflows/V1_0.MF_OpenTelemetryTestV1_0/nodes/HTTP%20Input"
+                    }
+                },
+                {
+                    "key": "http.response_content_length",
+                    "value": {
+                        "stringValue": "11"
+                    }
+                },
+                {
+                    "key": "http.status_code",
+                    "value": {
+                        "stringValue": "200"
+                    }
+                }],
+                "endTimeUnixNano": "1735063200000000000",
+                "kind": 2,
+                "name": "APP_OpenTelemetryTestV1.V1_0.MF_OpenTelemetryTestV1_0",
+                "spanId": "9b1c6260bccf4d60",
+                "startTimeUnixNano": "1735061400000000000",
+                "traceId": "c98ed88648b84215839ba61309041080"
+            }]
+        }]
+    }]
+}
