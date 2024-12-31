@@ -1,0 +1,1 @@
+type(SERVICE),tag("External Service"),toRelationships.calls(type(SERVICE),entityName("xxxxxx"))
